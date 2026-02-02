@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vicky Cafes | Premium Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.2);
+            --glass-btn: rgba(255, 255, 255, 0.45);
+            --blur: blur(25px);
+            --border: 1px solid rgba(255, 255, 255, 0.4);
+            --ios-blue: #007AFF; 
+            --success: #28a745;
+            --error: #ff3b30;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        body { font-family: 'Plus Jakarta Sans', sans-serif; color: #fff; min-height: 100vh; overflow-x: hidden; }
+
+        body::before {
+            content: "";
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRuA2MDtB0r_fvraEpOPx8y91X8s46bWqP1mLjOdl6NdWx540AOXs-zXo&s=10');
+            background-size: cover; background-position: center; z-index: -1;
+        }
+
+        header {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+            border-bottom: var(--border); padding: 12px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .logo { font-weight: 800; font-size: 1.3rem; color: #ffcc00; }
+
+        .search-container {
+            background: var(--glass-bg); border-radius: 12px;
+            padding: 8px 12px; display: flex; align-items: center; width: 50%; border: var(--border);
+        }
+
+        .search-container input { background: none; border: none; outline: none; width: 100%; font-size: 14px; color: #fff; }
+
+        .container { max-width: 600px; margin: 15px auto; padding: 0 12px 50px 12px; }
+
+        .stats-row {
+            display: flex; justify-content: space-around; margin-bottom: 25px;
+            background: var(--glass-bg); padding: 15px; border-radius: 20px; border: var(--border);
+            text-align: center; backdrop-filter: blur(10px);
+        }
+        .stat-item h2 { font-size: 1.2rem; margin-bottom: 2px; color: #ffcc00; animation: glow 2s infinite alternate; }
+        .stat-item p { font-size: 0.7rem; opacity: 0.8; }
+
+        @keyframes glow { from { text-shadow: 0 0 5px #ffcc00; } to { text-shadow: 0 0 15px #ffcc00; } }
+
+        .user-inputs { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+            margin-bottom: 20px; 
+            width: 100%;
+        }
+        .user-inputs input, .modal-inputs input {
+            width: 100%; padding: 12px; border-radius: 12px; border: var(--border);
+            background: var(--glass-bg); backdrop-filter: var(--blur); font-size: 12px; outline: none; color: #fff;
+        }
+        .modal-inputs input { color: #333; background: rgba(0,0,0,0.05); margin-bottom: 10px; }
+
+        .menu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .card {
+            background: var(--glass-bg); backdrop-filter: var(--blur); border: var(--border);
+            border-radius: 20px; padding: 10px; text-align: center;
+        }
+        .card img { width: 100%; height: 110px; object-fit: cover; border-radius: 15px; }
+        .card h3 { margin: 8px 0 4px; font-size: 0.9rem; }
+
+        .variant-box { 
+            width: 100%; padding: 6px; border-radius: 8px; border: none; 
+            background: rgba(255,255,255,0.7); margin-bottom: 8px; font-size: 11px;
+        }
+
+        .add-btn { background: #fff; color: #000; border: none; padding: 10px; border-radius: 10px; width: 100%; font-weight: 700; font-size: 12px; cursor: pointer; }
+
+        #showMoreBtn {
+            display: block; width: 60%; margin: 25px auto; padding: 12px;
+            background: var(--glass-btn); border: var(--border); color: #fff;
+            border-radius: 15px; font-weight: 600; cursor: pointer; backdrop-filter: blur(10px);
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(20px);
+            padding: 40px 20px 120px 20px; border-top: var(--border); text-align: center;
+        }
+        .footer-content h3 { color: #ffcc00; margin-bottom: 15px; }
+        .footer-content p { font-size: 0.9rem; margin: 5px 0; opacity: 0.8; }
+
+        .cart-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 450px; background: var(--ios-blue);
+            color: #fff; padding: 16px 20px; border-radius: 22px;
+            display: none; justify-content: space-between; align-items: center; z-index: 2000;
+        }
+
+        .order-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(15px);
+            display: none; justify-content: center; align-items: center; z-index: 2100; padding: 20px;
+        }
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95); width: 100%; max-width: 400px; padding: 25px; border-radius: 30px;
+            max-height: 85vh; overflow-y: auto; color: #333;
+        }
+
+        /* Bag Controls */
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
+        .qty-controls { display: flex; align-items: center; gap: 8px; }
+        .qty-btn { 
+            width: 28px; height: 28px; border-radius: 8px; border: none; 
+            background: #f0f0f0; cursor: pointer; font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Coupon Styling */
+        .coupon-section { margin: 15px 0; padding: 12px; background: #f8f8f8; border-radius: 15px; border: 1px dashed #bbb; }
+        .coupon-box { display: flex; gap: 5px; margin-top: 5px; }
+        .coupon-box input { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid #ddd; outline: none; }
+        .apply-btn { background: #333; color: #fff; border: none; padding: 0 12px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+
+        /* Animations */
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        .error-shake { animation: shake 0.3s ease-in-out; border-color: var(--error) !important; }
+        .success-glow { border-color: var(--success) !important; box-shadow: 0 0 8px rgba(40,167,69,0.2); }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+        .checkout-btn {
+            background: var(--ios-blue); color: white; padding: 15px; border-radius: 15px;
+            border: none; width: 100%; margin-top: 15px; font-weight: 800; cursor: pointer;
+            animation: pulse 2s infinite;
+        }
+
+        .support-btn {
+            position: fixed; bottom: 90px; left: 15px; background: #25D366;
+            color: white; padding: 10px 15px; border-radius: 12px; text-decoration: none; 
+            font-size: 12px; font-weight: 600; z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Vicky Cafes</div>
+        <div class="search-container">
+            <i class="fa fa-search" style="font-size: 12px;"></i>
+            <input type="text" id="searchInput" placeholder="Search dish..." oninput="filterMenu()">
+        </div>
+    </header>
+
+    <a href="https://wa.me/918529326036" class="support-btn" target="_blank">
+        <i class="fab fa-whatsapp"></i> Chat Support
+    </a>
+
+    <div class="container">
+        <div class="stats-row">
+            <div class="stat-item"><h2 id="clients">0</h2><p>Happy Clients</p></div>
+            <div class="stat-item"><h2 id="visitors">0</h2><p>Daily Visitors</p></div>
+            <div class="stat-item"><h2>4.9/5</h2><p>Top Rated</p></div>
+        </div>
+
+        <div class="user-inputs">
+            <input type="text" id="custName" placeholder="Name" oninput="syncInputs('custName', 'modalCustName')">
+            <input type="number" id="tabNum" placeholder="Table" oninput="syncInputs('tabNum', 'modalTabNum')">
+        </div>
+        
+        <div class="menu-grid" id="menuGrid"></div>
+
+        <button id="showMoreBtn" onclick="toggleItems()">Show More Items <i class="fa fa-chevron-down"></i></button>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <h3>Vicky Cafes</h3>
+            <p><i class="fa fa-map-marker-alt"></i> Ganesh Glory 11, Gota, Ahmedabad</p>
+            <p><i class="fa fa-phone"></i> +91 8529326036</p>
+            <p><strong>Owner: Vikash Kumar</strong></p>
+        </div>
+    </footer>
+
+    <div class="cart-bar" id="cartBar" onclick="showModal()">
+        <span><b id="itemCount">0</b> Items | ₹<b id="totalPriceBar">0</b></span>
+        <span>View Order <i class="fa fa-chevron-up"></i></span>
+    </div>
+
+    <div class="order-modal" id="orderModal">
+        <div class="modal-content">
+            <h2 style="margin-bottom:15px; border-bottom: 2px solid #eee; padding-bottom:10px;">🛒 Your Bag</h2>
+            
+            <div class="modal-inputs">
+                <input type="text" id="modalCustName" placeholder="Name" oninput="syncInputs('modalCustName', 'custName')">
+                <input type="number" id="modalTabNum" placeholder="Table" oninput="syncInputs('modalTabNum', 'tabNum')">
+            </div>
+
+            <div id="cartDetails"></div>
+
+            <div class="coupon-section">
+                <small style="font-weight:bold; color:#666">OFFERS (DIWALI10, NAV20, SUMMER5)</small>
+                <div class="coupon-box">
+                    <input type="text" id="couponInput" placeholder="Promo code">
+                    <button class="apply-btn" onclick="applyCoupon()">Apply</button>
+                </div>
+                <div id="couponMsg" style="font-size:11px; margin-top:5px; font-weight:600"></div>
+            </div>
+            
+            <div style="font-size: 0.9rem; color:#666; margin-top:10px">
+                <div style="display:flex; justify-content:space-between"><span>Subtotal</span><span>₹<span id="subTot">0</span></span></div>
+                <div style="display:flex; justify-content:space-between; color:var(--success)"><span>Discount</span><span>-₹<span id="discAmt">0</span></span></div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-top:10px; font-weight:800; font-size:1.2rem; border-top:1px solid #eee; padding-top:10px">
+                <span>Total</span>
+                <span>₹<span id="finalTotal">0</span></span>
+            </div>
+            <button class="checkout-btn" onclick="sendToWhatsApp()">Order on WhatsApp</button>
+            <center><p onclick="hideModal()" style="margin-top:15px; cursor:pointer; color:#888;">Add More Items</p></center>
+        </div>
+    </div>
+
+    <script>
+        const menuItems = [
+            { id: 1, name: "BURGER", img: "https://i.pinimg.com/736x/c9/c5/01/c9c5013a47c78dde12d22a8659cdb945.jpg", variants: [{t: "ALOO TIKKI BURGER", p: 60}, {t: "MASALA BURGER", p: 70}, {t: "VEGGIE BURGER", p: 80}, {t: "SPICY PANEER BURGER", p: 90}, {t: "DOUBLE DECKER BURGER", p: 100}] },
+            { id: 2, name: "PIZZA", img: "https://i.pinimg.com/736x/df/11/13/df11137f7ea78702571c15bccc691eb6.jpg", variants: [{t: "KULHAD PIZZA", p: 50}, {t: "MARGHERITA PIZZA", p: 120}, {t: "CORN CAPSICUM PIZZA", p: 130}, {t: "VEGETABLE PIZZA", p: 140}, {t: "TANDOORI PANEER PIZZA", p: 150}] },
+            { id: 3, name: "SANDWICH", img: "https://i.pinimg.com/736x/ce/d6/ce/ced6ce367d5bf2597d56db08b852cf1d.jpg", variants: [{t: "BOMBAY KACCHA SANDWICH", p: 60}, {t: "MASALA SANDWICH", p: 60}, {t: "CHEESE CHUTNEY SANDWICH", p: 80}, {t: "MASALA CHEESE SANDWICH", p: 80}, {t: "CHEESE CORN SANDWICH", p: 150}] },
+            { id: 4, name: "VADA PAV", img: "https://i.pinimg.com/736x/b2/f5/ae/b2f5aee563003508e7fb19d47e1114cd.jpg", variants: [{t: "Normal", p: 20}, {t: "Cheese", p: 40}] },
+            { id: 5, name: "PASTA", img: "https://i.pinimg.com/1200x/4d/66/04/4d66042191690afd72567d4e0c16a4c4.jpg", variants: [{t: "WHITE SAUCE PASTA", p: 120}, {t: "RED SAUCE PASTA ", p: 120}] },
+            { id: 6, name: "DESI CHAI", img: "https://i.pinimg.com/736x/99/02/ba/9902bad0f0d9c3ca2197f79ae0e05bdf.jpg", variants: [{t: "CUTTING CHAI", p: 10}, {t: "MASALA CHAI", p: 20}] },
+            { id: 7, name: "COLD COFFEE", img: "https://i.pinimg.com/736x/50/2c/d6/502cd6f3661716f4d054b9ff63454018.jpg", variants: [{t: "Classic", p: 50}, {t: "Choco", p: 80}] },
+            { id: 8, name: "FRENCH FRIES", img: "https://i.pinimg.com/1200x/e5/4c/56/e54c563a59cac646262b2c330d1559c6.jpg", variants: [{t: "Salted", p: 60}, {t: "Peri Peri", p: 90}] },
+            { id: 9, name: "MILK", img: "https://i.pinimg.com/736x/3f/2a/3e/3f2a3efc902ab0f48aab34672eec7cc8.jpg", variants: [{t: "Normal milk", p: 20}, {t: "KESAR BADAM MILK (HOT)", p: 60}] },
+            { id: 10, name: "SMOOTHIES", img: "https://i.pinimg.com/1200x/f1/ab/98/f1ab98af564ebbfa27d776e24152507b.jpg", variants: [{t: "MANGO", p: 80}, {t: "MIXBERRY", p: 80}, {t: "KIWI", p: 80}] },
+            { id: 11, name: "VEG MAGGI", img: "https://i.pinimg.com/736x/6d/41/05/6d41054c9370811cd5481d264f3836f8.jpg", variants: [{t: "Plain", p: 40}, {t: "Veggie", p: 60}] },
+            { id: 12, name: "CHOCOLATE SHAKE", img: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400", variants: [{t: "Large", p: 110}] },
+            { id: 13, name: "PANEER WRAP", img: "https://i.pinimg.com/736x/f2/72/c2/f272c2acdd4fe89d5c55967c97c9a2c0.jpg", variants: [{t: "Classic", p: 120}] },
+            { id: 14, name: "GARLIC BREAD", img: "https://i.pinimg.com/1200x/58/5b/b7/585bb77bcceae48e050e6184395334bf.jpg", variants: [{t: "Cheese", p: 110}] },
+            { id: 15, name: "HOT COFFEE", img: "https://i.pinimg.com/736x/1b/78/38/1b78386b35f401227a892921e4483759.jpg", variants: [{t: "Black", p: 40}, {t: "Milk", p: 60}] }
+        ];
+
+        const coupons = {
+            "DIWALI10": { p: 30, min: 1000, n: "Diwali Special" },
+            "SUMMER5": { p: 5, min: 100, n: "Summer Sale" },
+            "NAV20": { p: 20, min: 200, n: "Navratri Offer" },
+            "VICKY15": { p: 15, min: 150, n: "Vicky's Treat" },
+            "RAMESH": { p: 100, min: 10, n: "Vicky's Treat" },
+            "VIKASH": { p: 90, min: 10, n: "Vicky's Treat" }
+        };
+
+        let cart = [];
+        let showingAll = false;
+        let activeCoupon = null;
+
+        function syncInputs(s, d) { document.getElementById(d).value = document.getElementById(s).value; }
+
+        function renderMenu(itemsToRender = menuItems) {
+            const grid = document.getElementById('menuGrid');
+            grid.innerHTML = itemsToRender.map((item, index) => {
+                const isSearching = document.getElementById('searchInput').value.length > 0;
+                const displayStyle = (isSearching || index < 6 || showingAll) ? 'block' : 'none';
+                return `
+                <div class="card" style="display: ${displayStyle}">
+                    <img src="${item.img}">
+                    <h3>${item.name}</h3>
+                    <select id="var-${item.id}" class="variant-box">
+                        ${item.variants.map(v => `<option value="${v.p}">${v.t} - ₹${v.p}</option>`).join('')}
+                    </select>
+                    <button class="add-btn" onclick="addToCart(${item.id})">Add to Cart</button>
+                </div>`;
+            }).join('');
+        }
+
+        function filterMenu() {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = menuItems.filter(item => item.name.toLowerCase().includes(term));
+            renderMenu(filtered);
+            document.getElementById('showMoreBtn').style.display = term.length > 0 ? 'none' : 'block';
+        }
+
+        function toggleItems() {
+            showingAll = !showingAll;
+            renderMenu();
+            document.getElementById('showMoreBtn').innerHTML = showingAll ? 'Show Less <i class="fa fa-chevron-up"></i>' : 'Show More <i class="fa fa-chevron-down"></i>';
+        }
+
+        function addToCart(id) {
+            const item = menuItems.find(m => m.id === id);
+            const sel = document.getElementById(`var-${id}`);
+            const varName = sel.options[sel.selectedIndex].text.split(' - ')[0];
+            const price = parseInt(sel.value);
+            const exist = cart.find(c => c.id === id && c.variant === varName);
+            if(exist) exist.qty++; else cart.push({ id, name: item.name, variant: varName, price, qty: 1 });
+            updateUI();
+        }
+
+        function updateQty(i, d) {
+            cart[i].qty += d;
+            if(cart[i].qty < 1) cart.splice(i, 1);
+            updateUI();
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById('couponInput').value.toUpperCase();
+            const input = document.getElementById('couponInput');
+            const msg = document.getElementById('couponMsg');
+            let sub = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+
+            if(coupons[code]) {
+                if(sub >= coupons[code].min) {
+                    activeCoupon = coupons[code]; activeCoupon.code = code;
+                    input.classList.remove('error-shake'); input.classList.add('success-glow');
+                    msg.innerHTML = `<span style="color:var(--success)">✅ ${activeCoupon.n} Applied!</span>`;
+                } else {
+                    activeCoupon = null; msg.innerHTML = `<span style="color:var(--error)">❌ Min. ₹${coupons[code].min} needed</span>`;
+                    input.classList.add('error-shake'); setTimeout(() => input.classList.remove('error-shake'), 400);
+                }
+            } else {
+                activeCoupon = null; msg.innerHTML = `<span style="color:var(--error)">❌ Invalid Code</span>`;
+                input.classList.add('error-shake'); setTimeout(() => input.classList.remove('error-shake'), 400);
+            }
+            updateUI();
+        }
+
+        function updateUI() {
+            let sub = 0, count = 0;
+            document.getElementById('cartDetails').innerHTML = cart.map((item, i) => {
+                sub += (item.price * item.qty); count += item.qty;
+                return `<div class="cart-item">
+                    <div style="flex:1"><b>${item.name}</b><br><small>${item.variant}</small></div>
+                    <div class="qty-controls">
+                        <button class="qty-btn" onclick="updateQty(${i}, -1)">-</button>
+                        <span>${item.qty}</span>
+                        <button class="qty-btn" onclick="updateQty(${i}, 1)">+</button>
+                    </div>
+                </div>`;
+            }).join('');
+
+            let d = 0;
+            if(activeCoupon && sub >= activeCoupon.min) d = Math.floor((sub * activeCoupon.p) / 100);
+            else { activeCoupon = null; document.getElementById('couponMsg').innerText = ""; document.getElementById('couponInput').classList.remove('success-glow'); }
+
+            document.getElementById('subTot').innerText = sub;
+            document.getElementById('discAmt').innerText = d;
+            document.getElementById('finalTotal').innerText = sub - d;
+            document.getElementById('itemCount').innerText = count;
+            document.getElementById('totalPriceBar').innerText = sub - d;
+            document.getElementById('cartBar').style.display = cart.length > 0 ? 'flex' : 'none';
+        }
+
+        function sendToWhatsApp() {
+            const name = document.getElementById('modalCustName').value || document.getElementById('custName').value;
+            const table = document.getElementById('modalTabNum').value || document.getElementById('tabNum').value;
+            if(!name || !table) return alert("Please enter Name and Table!");
+            let msg = `*VICKY CAFES ORDER*%0A*Customer:* ${name}%0A*Table:* ${table}%0A-----------------%0A`;
+            cart.forEach((item, i) => msg += `${i+1}. ${item.name} (${item.variant}) x ${item.qty} = ₹${item.price * item.qty}%0A`);
+            if(activeCoupon) msg += `*Promo:* ${activeCoupon.code} (-₹${document.getElementById('discAmt').innerText})%0A`;
+            msg += `-----------------%0A*Total: ₹${document.getElementById('finalTotal').innerText}*`;
+            window.open(`https://wa.me/918529326036?text=${msg}`, '_blank');
+        }
+
+        function showModal() { document.getElementById('orderModal').style.display = 'flex'; }
+        function hideModal() { document.getElementById('orderModal').style.display = 'none'; }
+        
+        function animateStats(id, end) {
+            let s = 0;
+            let timer = setInterval(() => {
+                s++; document.getElementById(id).innerText = s + "+";
+                if(s >= end) clearInterval(timer);
+            }, 30);
+        }
+
+        renderMenu();
+        animateStats("clients", 100);
+        animateStats("visitors", 50);
+    </script>
+</body>
+</html>
