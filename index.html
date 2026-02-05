@@ -148,9 +148,101 @@
             color: white; padding: 10px 15px; border-radius: 12px; text-decoration: none; 
             font-size: 12px; font-weight: 600; z-index: 1000;
         }
+        :root {
+    --glass-bg: rgba(0, 105, 148, 0.2); 
+    --blur-val: 20px;
+}
+
+#v-preloader {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+    background: #001a2c; /* Deep Dark Sea Base (Taki white flash na ho) */
+}
+
+.glass-container {
+    position: relative;
+    width: 250px; /* Isse aap GIF ka area bada/chhota kar sakte hain */
+    height: 250px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--blur-val));
+    -webkit-backdrop-filter: blur(var(--blur-val));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 30px; /* Modern Rounded Look */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.2);
+    overflow: hidden;
+    animation: zoomIn 0.5s ease-out forwards; /* Entry Animation */
+}
+
+/* GIF Size control */
+.loader-gif {
+    width: 120px; 
+    z-index: 2;
+}
+
+/* Glossy Shimmer Effect - Jo move hota rahega */
+.shimmer {
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent);
+    transform: rotate(25deg);
+    animation: shine 3s infinite linear;
+}
+
+/* Animations */
+@keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shine {
+    0% { top: -100%; left: -100%; }
+    100% { top: 100%; left: 100%; }
+}
+
+/* Exit Animation */
+.loader-finish {
+    opacity: 0;
+    transform: scale(1.1);
+    filter: blur(20px);
+    visibility: hidden;
+    transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+/* Is value ko badha kar aap GIF bada kar sakte hain */
+.loader-gif {
+    width: 200px; /* 120px se badha kar 200px ya apni pasand ka size kar dein */
+    height: auto; 
+    z-index: 2;
+}
     </style>
 </head>
 <body>
+
+    <div id="v-preloader">
+    <div class="glass-container">
+        <img src="loding.gif" alt="Loading" class="loader-gif">
+        <div class="shimmer"></div> </div>
+</div>
+
+<script>
+    window.addEventListener("load", () => {
+        const preloader = document.getElementById('v-preloader');
+        
+        // 2.5 seconds perfect hai professionalism ke liye
+        setTimeout(() => {
+            preloader.classList.add('loader-finish');
+        }, 2500);
+    });
+</script>
 
     <header>
         <div class="logo">Vicky Cafes</div>
@@ -207,7 +299,7 @@
             <div id="cartDetails"></div>
 
             <div class="coupon-section">
-                <small style="font-weight:bold; color:#666">OFFERS (DIWALI10, NAV20, SUMMER5)</small>
+                <small style="font-weight:bold; color:#666">OFFERS (Optional)</small>
                 <div class="coupon-box">
                     <input type="text" id="couponInput" placeholder="Promo code">
                     <button class="apply-btn" onclick="applyCoupon()">Apply</button>
@@ -252,7 +344,9 @@
             "DIWALI10": { p: 30, min: 1000, n: "Diwali Special" },
             "SUMMER5": { p: 5, min: 100, n: "Summer Sale" },
             "NAV20": { p: 20, min: 200, n: "Navratri Offer" },
-            "RAMESH50": { p: 30, min: 200, n: "Vicky's Treat" }
+            "VICKY15": { p: 15, min: 150, n: "Vicky's Treat" },
+            "RAMESH": { p: 100, min: 10, n: "Vicky's Treat" },
+            "VIKASH": { p: 90, min: 10, n: "Vicky's Treat" }
         };
 
         let cart = [];
@@ -382,6 +476,4 @@
         animateStats("visitors", 50);
     </script>
 </body>
-
 </html>
-
